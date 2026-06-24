@@ -6,7 +6,7 @@
 include const4.inc
 
 extrn PutPixel:near
-extrn ZorroFont8x8
+extrn ZorroFont8x8:near
 
 .model small
 
