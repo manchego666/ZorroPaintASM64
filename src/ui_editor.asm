@@ -5,15 +5,15 @@
 
 include const4.inc
 
-EXTRN DrawRect:NEAR
-EXTRN DrawString:NEAR
-EXTRN PutPixel:NEAR
-EXTRN GetMouseState:NEAR
-EXTRN IsMouseClicked:NEAR
+extrn DrawRect:near
+extrn DrawString:near
+extrn PutPixel:near
+extrn GetMouseState:near
+extrn IsMouseClicked:near
 
-EXTRN CurrentColor:BYTE
-EXTRN MouseX:WORD
-EXTRN MouseY:WORD
+extrn CurrentColor:byte
+extrn MouseX:word
+extrn MouseY:word
 
 .model small
 
@@ -31,9 +31,9 @@ PaletteColors db 0,4,2,14,1,5,3,15   ; 8 colores
 
 .code
 
-;; ===========================
-;; REGION: DrawPalette
-;; ===========================
+; ===========================
+; DrawPalette
+; ===========================
 DrawPalette PROC
     push ax
     push bx
@@ -43,19 +43,23 @@ DrawPalette PROC
     push di
 
     mov cx, 20
-    mov dx, PaletteY
+    mov ax, PaletteY
+    mov dx, ax
     mov si, 20
     mov di, 10
-    mov bl, 0          ; índice color
+    mov bl, 0
 
-NextSwatch:
-    mov al, [PaletteColors+bx]
+NextSwatch_Draw:
+    mov bx, OFFSET PaletteColors
+    add bx, bl
+    mov al, [bx]
+
     call DrawRect
 
     add cx, 22
     inc bl
     cmp bl, 8
-    jb NextSwatch
+    jb NextSwatch_Draw
 
     pop di
     pop si
@@ -65,12 +69,11 @@ NextSwatch:
     pop ax
     ret
 DrawPalette ENDP
-;; END REGION
 
 
-;; ===========================
-;; REGION: HandlePaletteClick
-;; ===========================
+; ===========================
+; HandlePaletteClick
+; ===========================
 HandlePaletteClick PROC
     push ax
     push bx
@@ -78,50 +81,52 @@ HandlePaletteClick PROC
     push dx
     push si
     push di
+    push bp
 
     mov cx, 20
-    mov dx, PaletteY
+    mov ax, PaletteY
+    mov dx, ax
     mov si, 20
     mov di, 10
     mov bl, 0
 
-CheckSwatch:
+CheckSwatch_Click:
     call GetMouseState
     mov ax, MouseX
     mov bx, MouseY
 
-    ; dentro del rect actual?
     cmp ax, cx
-    jb NextSwatch
+    jb NextSwatch_Click
     mov bp, cx
     add bp, si
     cmp ax, bp
-    jae NextSwatch
+    jae NextSwatch_Click
 
     cmp bx, dx
-    jb NextSwatch
+    jb NextSwatch_Click
     mov bp, dx
     add bp, di
     cmp bx, bp
-    jae NextSwatch
+    jae NextSwatch_Click
 
-    ; clic?
     call IsMouseClicked
     cmp al, 1
-    jne NextSwatch
+    jne NextSwatch_Click
 
-    ; seleccionar color
-    mov al, [PaletteColors+bl]
+    mov bx, OFFSET PaletteColors
+    add bx, bl
+    mov al, [bx]
     mov CurrentColor, al
     jmp EndPaletteClick
 
-NextSwatch:
+NextSwatch_Click:
     add cx, 22
     inc bl
     cmp bl, 8
-    jb CheckSwatch
+    jb CheckSwatch_Click
 
 EndPaletteClick:
+    pop bp
     pop di
     pop si
     pop dx
@@ -130,17 +135,18 @@ EndPaletteClick:
     pop ax
     ret
 HandlePaletteClick ENDP
-;; END REGION
 
 
-;; ===========================
-;; REGION: HandleCanvasPaint
-;; ===========================
+; ===========================
+; HandleCanvasPaint
+; ===========================
 HandleCanvasPaint PROC
     push ax
     push bx
     push cx
     push dx
+    push si
+    push bp
 
     call GetMouseState
     call IsMouseClicked
@@ -150,7 +156,6 @@ HandleCanvasPaint PROC
     mov ax, MouseX
     mov bx, MouseY
 
-    ; dentro del canvas?
     mov cx, CanvasX
     mov dx, CanvasY
     cmp ax, cx
@@ -169,31 +174,32 @@ HandleCanvasPaint PROC
     cmp bx, bp
     jae NoPaint
 
-    ; pintar pixel
     mov cx, ax
     mov dx, bx
     mov al, CurrentColor
     call PutPixel
 
 NoPaint:
+    pop bp
+    pop si
     pop dx
     pop cx
     pop bx
     pop ax
     ret
 HandleCanvasPaint ENDP
-;; END REGION
 
 
-;; ===========================
-;; REGION: ShowEditor
-;; ===========================
+; ===========================
+; ShowEditor
+; ===========================
 ShowEditor PROC
     push ds
     mov ax, @data
     mov ds, ax
 
 EditorLoop:
+
     ; fondo
     mov cx, 0
     mov dx, 0
@@ -203,17 +209,21 @@ EditorLoop:
     call DrawRect
 
     ; título
-    mov cx, 10
+    mov cx, 100
     mov dx, 5
     mov si, OFFSET EditorTitle
     call DrawString
 
     ; canvas
-    mov cx, CanvasX
-    mov dx, CanvasY
-    mov si, CanvasW
-    mov di, CanvasH
-    mov al, 0
+    mov ax, CanvasX
+    mov cx, ax
+    mov ax, CanvasY
+    mov dx, ax
+    mov ax, CanvasW
+    mov si, ax
+    mov ax, CanvasH
+    mov di, ax
+    mov al, 7
     call DrawRect
 
     ; paleta
@@ -228,6 +238,5 @@ EditorLoop:
     pop ds
     ret
 ShowEditor ENDP
-;; END REGION
 
 end
