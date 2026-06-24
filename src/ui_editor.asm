@@ -50,8 +50,10 @@ DrawPalette PROC
     mov bl, 0
 
 NextSwatch_Draw:
+    mov al, bl
+    cbw
     mov bx, OFFSET PaletteColors
-    add bx, bl
+    add bx, ax
     mov al, [bx]
 
     call DrawRect
@@ -113,10 +115,13 @@ CheckSwatch_Click:
     cmp al, 1
     jne NextSwatch_Click
 
+    ; *** FIX DEL WARNING ***
+    mov al, bl
+    cbw
     mov bx, OFFSET PaletteColors
-    add bx, bl
+    add bx, ax
     mov al, [bx]
-    mov CurrentColor, al
+    mov byte ptr CurrentColor, al
     jmp EndPaletteClick
 
 NextSwatch_Click:
@@ -176,7 +181,7 @@ HandleCanvasPaint PROC
 
     mov cx, ax
     mov dx, bx
-    mov al, CurrentColor
+    mov al, byte ptr CurrentColor
     call PutPixel
 
 NoPaint:
@@ -200,7 +205,6 @@ ShowEditor PROC
 
 EditorLoop:
 
-    ; fondo
     mov cx, 0
     mov dx, 0
     mov si, SCREEN_WIDTH
@@ -208,13 +212,11 @@ EditorLoop:
     mov al, 0
     call DrawRect
 
-    ; título
     mov cx, 100
     mov dx, 5
     mov si, OFFSET EditorTitle
     call DrawString
 
-    ; canvas
     mov ax, CanvasX
     mov cx, ax
     mov ax, CanvasY
@@ -226,10 +228,7 @@ EditorLoop:
     mov al, 7
     call DrawRect
 
-    ; paleta
     call DrawPalette
-
-    ; input
     call HandlePaletteClick
     call HandleCanvasPaint
 
