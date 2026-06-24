@@ -3,7 +3,7 @@
 ; © 2026 ZorroDev
 ; ---------------------------------------------------------
 
-include include/constants.inc
+include constants.inc
 
 EXTERN InitVideo:PROC
 EXTERN InitPalette16:PROC
