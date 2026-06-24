@@ -3,10 +3,10 @@
 ; © 2026 ZorroDev - All Rights Reserved
 ; ---------------------------------------------------------
 
-include ../include/constants.inc
+include const4.inc
 
-EXTERN DrawRect:PROC
-EXTERN DrawString:PROC
+extrn DrawRect:near
+extrn DrawString:near
 
 .model small
 
@@ -16,13 +16,13 @@ BalloonPadY db 4
 
 .code
 
-;; ===========================
-;; REGION: DrawBalloon
-;; CX,DX = posición
-;; SI = ancho
-;; DI = alto
-;; DS:BX = texto
-;; ===========================
+; ===========================
+; DrawBalloon
+; CX,DX = posicion
+; SI = ancho
+; DI = alto
+; DS:BX = texto
+; ===========================
 DrawBalloon PROC
     push ax
     push bx
@@ -30,59 +30,81 @@ DrawBalloon PROC
     push dx
     push si
     push di
+    push bp
 
-    ; fondo del globo
+    
+    mov bp, cx       ; bp = x
+    mov ax, dx       ; ax = y
+
+    ; -----------------------------------
+    ; Fondo del globo
+    ; -----------------------------------
+    mov cx, bp
+    mov dx, ax
     mov al, 7
     call DrawRect
 
-    ; borde superior
-    mov ax, cx
-    mov bx, dx
-    mov cx, ax
-    mov dx, bx
-    mov si, si
+    ; -----------------------------------
+    ; Borde superior
+    ; -----------------------------------
+    mov cx, bp
+    mov dx, ax
+    mov si, si       
     mov di, 1
     mov al, 15
     call DrawRect
 
-    ; borde inferior
-    mov cx, ax
-    mov dx, bx
-    add dx, di
+    ; -----------------------------------
+    ; Borde inferior
+    ; -----------------------------------
+    mov cx, bp
+    mov dx, ax
+    add dx, di       
+    add dx, si       
     dec dx
     mov si, si
     mov di, 1
     mov al, 15
     call DrawRect
 
-    ; borde izquierdo
-    mov cx, ax
-    mov dx, bx
+    ; -----------------------------------
+    ; Borde izquierdo
+    ; -----------------------------------
+    mov cx, bp
+    mov dx, ax
     mov si, 1
-    mov di, di
+    mov di, di       ; alto
     mov al, 15
     call DrawRect
 
-    ; borde derecho
-    mov cx, ax
-    add cx, si
+    ; -----------------------------------
+    ; Borde derecho
+    ; -----------------------------------
+    mov cx, bp
+    add cx, si       ; x + ancho
     dec cx
-    mov dx, bx
+    mov dx, ax
     mov si, 1
     mov di, di
     mov al, 15
     call DrawRect
 
-    ; texto dentro
-    mov ax, cx
-    mov dx, bx
-    add ax, BalloonPadX
-    add dx, BalloonPadY
-    mov cx, ax
-    mov dx, dx
+    ; -----------------------------------
+    ; Texto dentro
+    ; -----------------------------------
+    mov cx, bp
+    mov dx, ax
+
+    mov al, byte ptr BalloonPadX
+    add cx, ax
+
+    mov al, byte ptr BalloonPadY
+    add dx, ax
+
     mov si, bx
     call DrawString
 
+    pop bp
     pop di
     pop si
     pop dx
@@ -91,6 +113,5 @@ DrawBalloon PROC
     pop ax
     ret
 DrawBalloon ENDP
-;; END REGION
 
 end
