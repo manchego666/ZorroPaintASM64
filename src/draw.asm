@@ -6,7 +6,7 @@
 include const4.inc
 
 extrn PutPixel:near
-extrn ZorroFont8x8:byte
+extrn ZorroFont8x8
 
 .model small
 
@@ -29,9 +29,9 @@ DrawChar8x8 PROC
 
     xor bh, bh
     mov bl, al
-    shl bx, 1
-    shl bx, 1
-    shl bx, 1
+    add bx, bx
+    add bx, bx
+    add bx, bx
 
     mov si, OFFSET ZorroFont8x8
     add si, bx
