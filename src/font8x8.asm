@@ -1,87 +1,112 @@
 ; ---------------------------------------------------------
-; ZorroPaintASM64 - 8x8 Font Table
+; ZorroPaintASM64 - ZorroFont 8x8 (Minimal)
 ; © 2026 ZorroDev - All Rights Reserved
 ; ---------------------------------------------------------
 
+.model small
+.data
+
 ;; ===========================
-;; REGION: Font 8x8 ASCII
+;; REGION: ZorroFont 8x8
 ;; ===========================
-Font8x8 LABEL BYTE
+ZorroFont8x8 LABEL BYTE
 
-; 0x00
+; 0 = espacio
 db 00h,00h,00h,00h,00h,00h,00h,00h
-; 0x01
-db 7Eh,81h,95h,81h,95h,81h,7Eh,00h
-; 0x02
-db 7Eh,FFh,EBh,FFh,EBh,FFh,7Eh,00h
-; 0x03
-db 0Ch,1Eh,3Ch,78h,3Ch,1Eh,0Ch,00h
-; 0x04
-db 18h,3Ch,7Eh,18h,18h,7Eh,3Ch,18h
-; 0x05
-db 10h,38h,7Ch,FEh,7Ch,38h,10h,00h
-; 0x06
-db 10h,38h,7Ch,FEh,FEh,10h,38h,7Ch
-; 0x07
-db 00h,00h,18h,3Ch,3Ch,18h,00h,00h
-; 0x08
-db FFh,FFh, E7h, C3h, C3h, E7h, FFh, FFh
-; 0x09
-db 00h,3Ch,66h,42h,42h,66h,3Ch,00h
-; 0x0A
-db FFh, C3h, 99h, BDh, BDh, 99h, C3h, FFh
-; 0x0B
-db 0Fh,07h,0Fh,7Dh, CCh, CCh, CCh,78h
-; 0x0C
-db 3Ch,66h,66h,66h,3Ch,18h,7Eh,18h
-; 0x0D
-db 3Fh,33h,3Fh,30h,30h,70h, F0h, E0h
-; 0x0E
-db 7Fh,63h,7Fh,63h,63h,67h, E6h, C0h
-; 0x0F
-db 99h,5Ah,3Ch, E7h, E7h,3Ch,5Ah,99h
 
-; 0x10 – 0x7F (ASCII complete)
-; ---------------------------------------------------------
-; Nota: Esta es la fuente BIOS clásica 8x8 completa.
-; Está lista para DrawChar8x8 sin modificaciones.
-; ---------------------------------------------------------
+; 1 = A
+db 18h,24h,42h,7Eh,42h,42h,42h,00h
 
-; 0x10
-db 00h,00h,00h,00h,00h,00h,00h,00h
-; 0x11
-db 18h,3Ch,3Ch,18h,18h,00h,18h,00h
-; 0x12
-db 6Ch,6Ch,24h,00h,00h,00h,00h,00h
-; 0x13
-db 6Ch,6Ch, FEh,6Ch, FEh,6Ch,6Ch,00h
-; 0x14
-db 18h,3Eh,60h,3Ch,06h,7Ch,18h,00h
-; 0x15
-db 00h, C6h, CCh,18h,30h,66h, C6h,00h
-; 0x16
-db 38h,6Ch,38h,76h, DCh, CCh,76h,00h
-; 0x17
-db 30h,30h,60h,00h,00h,00h,00h,00h
-; 0x18
-db 0Ch,18h,30h,30h,30h,18h,0Ch,00h
-; 0x19
-db 30h,18h,0Ch,0Ch,0Ch,18h,30h,00h
-; 0x1A
-db 00h,66h,3Ch, FFh,3Ch,66h,00h,00h
-; 0x1B
-db 00h,18h,18h,7Eh,18h,18h,00h,00h
-; 0x1C
-db 00h,00h,00h,00h,18h,18h,30h,00h
-; 0x1D
-db 00h,00h,00h,7Eh,00h,00h,00h,00h
-; 0x1E
-db 00h,00h,00h,00h,18h,18h,00h,00h
-; 0x1F
-db 06h,0Ch,18h,30h,60h, C0h,80h,00h
+; 2 = B
+db 7Ch,42h,42h,7Ch,42h,42h,7Ch,00h
 
-; ---------------------------------------------------------
-; (Aquí continúa toda la tabla ASCII 0x20–0x7F completa)
-; ---------------------------------------------------------
+; 3 = C
+db 3Ch,42h,40h,40h,40h,42h,3Ch,00h
+
+; 4 = D
+db 78h,44h,42h,42h,42h,44h,78h,00h
+
+; 5 = E
+db 7Eh,40h,40h,7Ch,40h,40h,7Eh,00h
+
+; 6 = F
+db 7Eh,40h,40h,7Ch,40h,40h,40h,00h
+
+; 7 = G
+db 3Ch,42h,40h,4Eh,42h,42h,3Ch,00h
+
+; 8 = H
+db 42h,42h,42h,7Eh,42h,42h,42h,00h
+
+; 9 = I
+db 7Eh,18h,18h,18h,18h,18h,7Eh,00h
+
+; 10 = J
+db 7Eh,04h,04h,04h,04h,44h,38h,00h
+
+; 11 = K
+db 42h,44h,48h,70h,48h,44h,42h,00h
+
+; 12 = L
+db 40h,40h,40h,40h,40h,40h,7Eh,00h
+
+; 13 = M
+db 42h,66h,5Ah,5Ah,42h,42h,42h,00h
+
+; 14 = N
+db 42h,62h,52h,4Ah,46h,42h,42h,00h
+
+; 15 = O
+db 3Ch,42h,42h,42h,42h,42h,3Ch,00h
+
+; 16 = P
+db 7Ch,42h,42h,7Ch,40h,40h,40h,00h
+
+; 17 = Q
+db 3Ch,42h,42h,42h,4Ah,44h,3Ah,00h
+
+; 18 = R
+db 7Ch,42h,42h,7Ch,48h,44h,42h,00h
+
+; 19 = S
+db 3Ch,42h,40h,3Ch,02h,42h,3Ch,00h
+
+; 20 = T
+db 7Eh,18h,18h,18h,18h,18h,18h,00h
+
+; 21 = U
+db 42h,42h,42h,42h,42h,42h,3Ch,00h
+
+; 22 = V
+db 42h,42h,42h,42h,24h,24h,18h,00h
+
+; 23 = W
+db 42h,42h,42h,5Ah,5Ah,66h,42h,00h
+
+; 24 = X
+db 42h,24h,18h,18h,18h,24h,42h,00h
+
+; 25 = Y
+db 42h,24h,18h,18h,18h,18h,18h,00h
+
+; 26 = Z
+db 7Eh,04h,08h,10h,20h,40h,7Eh,00h
+
+; 27 = 0
+db 3Ch,42h,46h,4Ah,52h,62h,3Ch,00h
+
+; 28 = 1
+db 18h,38h,18h,18h,18h,18h,7Eh,00h
+
+; 29 = 2
+db 3Ch,42h,02h,3Ch,40h,40h,7Eh,00h
+
+; 30 = 3
+db 3Ch,42h,02h,1Ch,02h,42h,3Ch,00h
+
+; 31 = 4
+db 08h,18h,28h,48h,7Eh,08h,08h,00h
 
 ;; END REGION
+
+end
