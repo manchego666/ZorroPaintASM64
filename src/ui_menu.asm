@@ -7,21 +7,27 @@ include ../include/constants.inc
 
 EXTERN DrawRect:PROC
 EXTERN DrawString:PROC
+EXTERN GetMouseState:PROC
+EXTERN IsMouseOver:PROC
+EXTERN IsMouseClicked:PROC
 
 .model small
 
 .data
-MenuTitle      db "ZORROPAINT ASM64",0
-MenuOpt1       db "PROJECTS",0
-MenuOpt2       db "EDITOR",0
-MenuOpt3       db "EXIT",0
+MenuTitle   db "ZORROPAINT ASM64",0
+Btn1Text    db "PROJECTS",0
+Btn2Text    db "EDITOR",0
+Btn3Text    db "EXIT",0
+
+BtnW dw 120
+BtnH dw 20
 
 .code
 
 ;; ===========================
 ;; REGION: DrawMenuButton
-;; CX,DX = x,y   SI = w   DI = h
-;; DS:SI = texto (se pasa aparte)
+;; CX,DX = x,y
+;; DS:SI = texto
 ;; ===========================
 DrawMenuButton PROC
     push ax
@@ -31,11 +37,39 @@ DrawMenuButton PROC
     push si
     push di
 
+    mov ax, BtnW
+    mov si, ax
+    mov ax, BtnH
+    mov di, ax
+
+    ; hover?
+    call GetMouseState
+    mov bx, cx
+    mov bp, dx
+    mov si, BtnW
+    mov di, BtnH
+    call IsMouseOver
+    cmp al, 1
+    jne NormalColor
+
+    mov al, 9
+    jmp DrawRectNow
+
+NormalColor:
     mov al, 8
+
+DrawRectNow:
     call DrawRect
 
-    add cx, 4
-    add dx, 6
+    ; texto centrado
+    mov ax, cx
+    add ax, 6
+    mov cx, ax
+
+    mov ax, dx
+    add ax, 6
+    mov dx, ax
+
     call DrawString
 
     pop di
@@ -54,11 +88,10 @@ DrawMenuButton ENDP
 ;; ===========================
 ShowMainMenu PROC
     push ds
-    push si
-    push cx
-    push dx
-    push si
-    push di
+    mov ax, @data
+    mov ds, ax
+
+MenuLoop:
 
     ; fondo
     mov cx, 0
@@ -69,48 +102,88 @@ ShowMainMenu PROC
     call DrawRect
 
     ; título
-    mov ax, @data
-    mov ds, ax
-    mov si, OFFSET MenuTitle
-    mov cx, 80
+    mov cx, 70
     mov dx, 30
+    mov si, OFFSET MenuTitle
     call DrawString
 
     ; botón 1
-    mov si, OFFSET MenuOpt1
     mov cx, 100
     mov dx, 80
-    mov bx, 120
-    mov di, 20
-    mov ax, bx
-    mov si, ax
+    mov si, OFFSET Btn1Text
     call DrawMenuButton
 
     ; botón 2
-    mov si, OFFSET MenuOpt2
     mov cx, 100
     mov dx, 110
-    mov ax, 120
-    mov si, ax
-    mov di, 20
+    mov si, OFFSET Btn2Text
     call DrawMenuButton
 
     ; botón 3
-    mov si, OFFSET MenuOpt3
     mov cx, 100
     mov dx, 140
-    mov ax, 120
-    mov si, ax
-    mov di, 20
+    mov si, OFFSET Btn3Text
     call DrawMenuButton
 
-    pop di
-    pop si
-    pop dx
-    pop cx
-    pop si
-    pop ds
-    ret
+    ; lógica de clic
+    call GetMouseState
+
+    ; botón 1
+    mov cx, 100
+    mov dx, 80
+    mov si, BtnW
+    mov di, BtnH
+    call IsMouseOver
+    cmp al, 1
+    jne CheckBtn2
+    call IsMouseClicked
+    cmp al, 1
+    je Btn1Action
+
+CheckBtn2:
+    mov cx, 100
+    mov dx, 110
+    mov si, BtnW
+    mov di, BtnH
+    call IsMouseOver
+    cmp al, 1
+    jne CheckBtn3
+    call IsMouseClicked
+    cmp al, 1
+    je Btn2Action
+
+CheckBtn3:
+    mov cx, 100
+    mov dx, 140
+    mov si, BtnW
+    mov di, BtnH
+    call IsMouseOver
+    cmp al, 1
+    jne ContinueLoop
+    call IsMouseClicked
+    cmp al, 1
+    je Btn3Action
+
+ContinueLoop:
+    jmp MenuLoop
+
+
+;; ===========================
+;; REGION: Acciones
+;; ===========================
+Btn1Action:
+    ; aquí llamas a tu módulo de proyectos
+    jmp MenuLoop
+
+Btn2Action:
+    ; aquí llamas al editor
+    jmp MenuLoop
+
+Btn3Action:
+    ; salir al DOS
+    mov ax, 4C00h
+    int 21h
+
 ShowMainMenu ENDP
 ;; END REGION
 
