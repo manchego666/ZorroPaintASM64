@@ -3,23 +3,22 @@
 ; © 2026 ZorroDev - All Rights Reserved
 ; ---------------------------------------------------------
 
-include ../include/constants.inc
-EXTERN PutPixel:PROC
-EXTERN ZorroFont8x8:BYTE
+include const4.inc
+
+extrn PutPixel:near
+extrn ZorroFont8x8:byte
 
 .model small
+
 .data
 CurrentColor db 15
-RowCount db 8
+RowCount     db 8
 
 .code
 
-;; ================================
-;; REGION: DrawChar8x8
-;; AL = índice de ZorroFont
-;; CX = X
-;; DX = Y
-;; ================================
+; ================================
+; DrawChar8x8
+; ================================
 DrawChar8x8 PROC
     push ax
     push bx
@@ -28,13 +27,17 @@ DrawChar8x8 PROC
     push si
     push di
 
+    xor bh, bh
     mov bl, al
-    shl bx, 3
+    shl bx, 1
+    shl bx, 1
+    shl bx, 1
+
     mov si, OFFSET ZorroFont8x8
     add si, bx
 
     mov di, dx
-    mov RowCount, 8
+    mov byte ptr RowCount, 8
 
 RowLoop:
     mov al, [si]
@@ -44,10 +47,12 @@ RowLoop:
 BitLoop:
     test al, 80h
     jz SkipPixel
+
     mov al, CurrentColor
     mov cx, bx
     mov dx, di
     call PutPixel
+
 SkipPixel:
     shl al, 1
     inc bx
@@ -56,7 +61,7 @@ SkipPixel:
 
     inc si
     inc di
-    dec RowCount
+    dec byte ptr RowCount
     jnz RowLoop
 
     pop di
@@ -67,20 +72,17 @@ SkipPixel:
     pop ax
     ret
 DrawChar8x8 ENDP
-;; END REGION
 
 
-;; ================================
-;; REGION: DrawString
-;; DS:SI = texto
-;; CX = X
-;; DX = Y
-;; ================================
+; ================================
+; DrawString
+; ================================
 DrawString PROC
 NextChar:
     lodsb
     cmp al, 0
     je EndString
+
     call DrawChar8x8
     add cx, 8
     jmp NextChar
@@ -88,6 +90,5 @@ NextChar:
 EndString:
     ret
 DrawString ENDP
-;; END REGION
 
 end
