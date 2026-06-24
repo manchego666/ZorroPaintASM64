@@ -1,6 +1,6 @@
 ; ---------------------------------------------------------
-; ZorroPaintASM64 - Main Entry Point
-; © 2026 ZorroDev - All Rights Reserved
+; ZorroPaintASM64 - Main
+; © 2026 ZorroDev
 ; ---------------------------------------------------------
 
 include include/constants.inc
@@ -19,33 +19,23 @@ EXTERN ExportCanvasASM:PROC
 
 .code
 
+; Init
 start:
-    ; segmento de datos
     mov ax, @data
     mov ds, ax
 
-    ; inicializar video
     call InitVideo
-
-    ; paleta profesional
     call InitPalette16
-
-    ; mouse
     call InitMouse
     call ShowMouseCursor
 
+; Loop
 MainLoop:
-    ; mostrar menú principal
     call ShowMainMenu
-
-    ; ShowMainMenu solo regresa si el usuario eligió EDITOR
     call ShowEditor
-
-    ; después del editor, exportar 
-    ; call ExportCanvasASM
-
     jmp MainLoop
 
+; Exit
 ExitProgram:
     mov ax, 4C00h
     int 21h
