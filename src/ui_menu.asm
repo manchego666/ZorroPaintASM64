@@ -5,11 +5,11 @@
 
 include const4.inc
 
-EXTERN DrawRect:PROC
-EXTERN DrawString:PROC
-EXTERN GetMouseState:PROC
-EXTERN IsMouseOver:PROC
-EXTERN IsMouseClicked:PROC
+EXTRN DrawRect:PROC
+EXTRN DrawString:PROC
+EXTRN GetMouseState:PROC
+EXTRN IsMouseOver:PROC
+EXTRN IsMouseClicked:PROC
 
 .model small
 
