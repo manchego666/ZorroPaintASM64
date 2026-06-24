@@ -3,7 +3,7 @@
 ; © 2026 ZorroDev - All Rights Reserved
 ; ---------------------------------------------------------
 
-include ../include/constants.inc
+include const4.inc
 
 EXTERN DrawRect:PROC
 EXTERN DrawString:PROC
@@ -24,11 +24,11 @@ BtnH dw 20
 
 .code
 
-;; ===========================
-;; REGION: DrawMenuButton
-;; CX,DX = x,y
-;; DS:SI = texto
-;; ===========================
+; ===========================
+; DrawMenuButton
+; CX,DX = x,y
+; DS:SI = texto
+; ===========================
 DrawMenuButton PROC
     push ax
     push bx
@@ -37,17 +37,16 @@ DrawMenuButton PROC
     push si
     push di
 
+    ; cargar ancho y alto
     mov ax, BtnW
-    mov si, ax
+    mov bx, ax
     mov ax, BtnH
-    mov di, ax
+    mov bp, ax
 
     ; hover?
     call GetMouseState
-    mov bx, cx
-    mov bp, dx
-    mov si, BtnW
-    mov di, BtnH
+    mov si, bx
+    mov di, bp
     call IsMouseOver
     cmp al, 1
     jne NormalColor
@@ -59,6 +58,8 @@ NormalColor:
     mov al, 8
 
 DrawRectNow:
+    mov si, bx
+    mov di, bp
     call DrawRect
 
     ; texto centrado
@@ -80,12 +81,11 @@ DrawRectNow:
     pop ax
     ret
 DrawMenuButton ENDP
-;; END REGION
 
 
-;; ===========================
-;; REGION: ShowMainMenu
-;; ===========================
+; ===========================
+; ShowMainMenu
+; ===========================
 ShowMainMenu PROC
     push ds
     mov ax, @data
@@ -168,23 +168,19 @@ ContinueLoop:
     jmp MenuLoop
 
 
-;; ===========================
-;; REGION: Acciones
-;; ===========================
+; ===========================
+; Acciones
+; ===========================
 Btn1Action:
-    ; aquí llamas a tu módulo de proyectos
     jmp MenuLoop
 
 Btn2Action:
-    ; aquí llamas al editor
     jmp MenuLoop
 
 Btn3Action:
-    ; salir al DOS
     mov ax, 4C00h
     int 21h
 
 ShowMainMenu ENDP
-;; END REGION
 
 end
