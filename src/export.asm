@@ -3,12 +3,12 @@
 ; Convierte el canvas en líneas db estilo ASM
 ; ---------------------------------------------------------
 
-include ../include/constants.inc
+include const4.inc
 
-EXTERN CanvasX:WORD
-EXTERN CanvasY:WORD
-EXTERN CanvasW:WORD
-EXTERN CanvasH:WORD
+extrn CanvasX:word
+extrn CanvasY:word
+extrn CanvasW:word
+extrn CanvasH:word
 
 .model small
 
@@ -57,11 +57,9 @@ ExportCanvasASM PROC
     mov ax, @data
     mov ds, ax
 
-    ; header
     mov si, OFFSET HeaderTxt
     call PrintString
 
-    ; preparar VRAM
     mov ax, 0A000h
     mov es, ax
 
@@ -71,7 +69,6 @@ RowLoop:
     mov ax, CanvasX
     mov cx, ax          ; x
 
-    ; inicio de línea: tab
     mov dl, 9
     call PrintChar
 
@@ -79,18 +76,17 @@ RowLoop:
     mov si, ax          ; contador ancho
 
 ColLoop:
-    ; offset = y*320 + x
     mov ax, dx
     mov bx, 320
     mul bx
     add ax, cx
     mov bx, ax
 
-    mov al, es:[bx]     ; color 0-15
+    mov al, es:[bx]
     and al, 0Fh
     mov ah, 0
     mov bl, al
-    mov dl, [HexDigits+bx]
+    mov dl, byte ptr HexDigits[bx]
     call PrintChar
     mov dl, 'h'
     call PrintChar
@@ -101,7 +97,6 @@ ColLoop:
     dec si
     jnz ColLoop
 
-    ; fin de línea
     mov si, OFFSET NewLine
     call PrintString
 
@@ -121,6 +116,5 @@ ColLoop:
     pop ax
     ret
 ExportCanvasASM ENDP
-;; END REGION
 
 end
