@@ -3,10 +3,14 @@
 ; © 2026 ZorroDev - All Rights Reserved
 ; ---------------------------------------------------------
 
+include ../include/constants.inc
+
 .model small
 .code
 
-;; REGION: Init Video Mode (320x200 Mode 13h)
+;; ===========================
+;; REGION: Init Video
+;; ===========================
 InitVideo PROC
     mov ax, 0013h
     int 10h
@@ -16,8 +20,10 @@ InitVideo PROC
 InitVideo ENDP
 ;; END REGION
 
+
+;; ===========================
 ;; REGION: PutPixel
-; CX = X, DX = Y, AL = Color
+;; ===========================
 PutPixel PROC
     mov bx, dx
     shl bx, 6
