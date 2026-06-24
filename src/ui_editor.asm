@@ -3,17 +3,17 @@
 ; © 2026 ZorroDev - All Rights Reserved
 ; ---------------------------------------------------------
 
-include ../include/constants.inc
+include const4.inc
 
-EXTERN DrawRect:PROC
-EXTERN DrawString:PROC
-EXTERN PutPixel:PROC
-EXTERN GetMouseState:PROC
-EXTERN IsMouseClicked:PROC
+EXTRN DrawRect:NEAR
+EXTRN DrawString:NEAR
+EXTRN PutPixel:NEAR
+EXTRN GetMouseState:NEAR
+EXTRN IsMouseClicked:NEAR
 
-EXTERN CurrentColor:BYTE
-EXTERN MouseX:WORD
-EXTERN MouseY:WORD
+EXTRN CurrentColor:BYTE
+EXTRN MouseX:WORD
+EXTRN MouseY:WORD
 
 .model small
 
