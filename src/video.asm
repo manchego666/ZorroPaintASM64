@@ -3,7 +3,7 @@
 ; © 2026 ZorroDev - All Rights Reserved
 ; ---------------------------------------------------------
 
-include ../include/constants.inc
+include const4.inc
 
 .model small
 .code
@@ -27,8 +27,13 @@ InitVideo ENDP
 ;; ===========================
 PutPixel PROC
     mov bx, dx
-    shl bx, 6
-    shl dx, 8
+
+    mov cl, 6
+    shl bx, cl
+
+    mov cl, 8
+    shl dx, cl
+
     add bx, dx
     add bx, cx
     mov es:[bx], al
