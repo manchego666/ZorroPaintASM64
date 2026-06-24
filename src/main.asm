@@ -3,23 +3,25 @@
 ; © 2026 ZorroDev
 ; ---------------------------------------------------------
 
-include constants.inc
+include const4.inc
 
-EXTERN InitVideo:PROC
-EXTERN InitPalette16:PROC
-EXTERN InitMouse:PROC
-EXTERN ShowMouseCursor:PROC
+EXTRN InitVideo:NEAR
+EXTRN InitPalette16:NEAR
+EXTRN InitMouse:NEAR
+EXTRN ShowMouseCursor:NEAR
 
-EXTERN ShowMainMenu:PROC
-EXTERN ShowEditor:PROC
-EXTERN ExportCanvasASM:PROC
+EXTRN ShowMainMenu:NEAR
+EXTRN ShowEditor:NEAR
+EXTRN ExportCanvasASM:NEAR
 
 .model small
 .stack 100h
 
+.data
+; si const4.inc define data, aquí no va nada
+
 .code
 
-; Init
 start:
     mov ax, @data
     mov ds, ax
@@ -29,13 +31,11 @@ start:
     call InitMouse
     call ShowMouseCursor
 
-; Loop
 MainLoop:
     call ShowMainMenu
     call ShowEditor
     jmp MainLoop
 
-; Exit
 ExitProgram:
     mov ax, 4C00h
     int 21h
